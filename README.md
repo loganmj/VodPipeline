@@ -97,7 +97,7 @@ The watcher will monitor the `INPUT_DIR` for new MP4 files and automatically pro
 ### Processing Workflow
 
 1. A new MP4 file is detected in the input directory
-2. The file is waited for stability (10 seconds without size change)
+2. The pipeline waits for the file to become stable (10 seconds without size change)
 3. Silence is removed from the video
 4. Scenes are detected in the cleaned video
 5. Highlights are extracted based on scene analysis
@@ -113,7 +113,8 @@ EXPORT_BASE/
 └── {video_name}/
     ├── clean.mp4              # Video with silence removed
     ├── pipeline.log           # Processing log
-    ├── {video_name}-Scenes.csv # Scene detection data
+    ├── scenes/
+    │   └── {video_name}-Scenes.csv # Scene detection data
     └── highlights/
         ├── highlight_01.mp4
         ├── highlight_02.mp4
