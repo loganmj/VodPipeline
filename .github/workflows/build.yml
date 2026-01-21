@@ -34,3 +34,9 @@ jobs:
         echo "Building VodPipeline project..."
         python -m compileall . -q
         echo "Build completed successfully"
+    
+    - name: Run unit tests
+      run: |
+        echo "Running unit tests..."
+        python -m pytest tests/ -v --tb=short
+        echo "All tests passed successfully"
