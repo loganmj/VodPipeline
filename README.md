@@ -72,7 +72,10 @@ LOG_DIR = Path("/path/to/logs")
 
 ### 6. Create Required Directories
 
+Create the directories you configured in the previous step:
+
 ```bash
+# Replace these paths with the ones you configured in bin/config.py
 mkdir -p /path/to/your/recordings
 mkdir -p /path/to/output/complete
 mkdir -p /path/to/tmp
@@ -129,7 +132,7 @@ Edit `bin/config.py` to customize:
 
 To run VodPipeline as a systemd service:
 
-1. Create a service file at `/etc/systemd/system/vod-pipeline.service`:
+1. Create a service file at `/etc/systemd/system/vod-pipeline.service` (replace `your-user` and `/path/to/VodPipeline` with your actual username and installation path):
 
 ```ini
 [Unit]
