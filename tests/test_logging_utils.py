@@ -40,7 +40,10 @@ class TestLoggingUtils(unittest.TestCase):
         logging_utils.log("Test")
         output = mock_stdout.getvalue()
         # Check for timestamp format (YYYY-MM-DD HH:MM:SS)
-        self.assertTrue(any(str(datetime.now().year) in line for line in output.split('\n')))
+        # Look for the pattern [PIPELINE] YYYY-MM-DD HH:MM:SS
+        import re
+        timestamp_pattern = r'\[PIPELINE\] \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
+        self.assertRegex(output, timestamp_pattern, "Log should include timestamp in format YYYY-MM-DD HH:MM:SS")
 
     @patch('sys.stdout', new_callable=StringIO)
     @patch('pathlib.Path.open', new_callable=mock_open)
@@ -58,7 +61,7 @@ class TestLoggingUtils(unittest.TestCase):
         handle.write.assert_called()
         
         # Check that the test message was part of what was written
-        written_content = ''.join([call[0][0] for call in handle.write.call_args_list])
+        written_content = ''.join([call.args[0] if call.args else '' for call in handle.write.call_args_list])
         self.assertIn(test_message, written_content)
 
 
