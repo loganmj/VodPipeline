@@ -2,8 +2,8 @@ import os
 from pathlib import Path
 
 # Base paths
-INPUT_DIR = Path("/mnt/pipeline/Recordings")
-EXPORT_BASE = Path("/mnt/pipeline/VPipeline/Complete")
+INPUT_DIR = Path("~/vod-pipeline/input")
+EXPORT_BASE = Path("~/vod-pipeline/output")
 TMP_DIR = Path("/opt/vod-pipeline/tmp")
 LOG_DIR = Path("/opt/vod-pipeline/logs")
 ARCHIVE_DIR = INPUT_DIR / "Archive"
