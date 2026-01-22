@@ -1,4 +1,4 @@
-# VodPipeline
+# VODPipeline-Function
 
 An automated pipeline for first-pass editing of VOD recordings. This tool watches for new video files, removes silence, detects scenes, and extracts highlights automatically.
 
@@ -54,11 +54,11 @@ bash ./models/download-ggml-model.sh base.en
 
 Update the paths in `bin/config.py` to point to your whisper.cpp installation.
 
-### 5. Clone and Configure VodPipeline
+### 5. Clone and Configure VODPipeline-Function
 
 ```bash
-git clone https://github.com/loganmj/VodPipeline.git
-cd VodPipeline
+git clone https://github.com/loganmj/VODPipeline-Function.git
+cd VODPipeline-Function
 ```
 
 Edit `bin/config.py` to configure your directories:
@@ -131,9 +131,9 @@ Edit `bin/config.py` to customize:
 
 ## Running as a Service
 
-To run VodPipeline as a systemd service:
+To run VODPipeline-Function as a systemd service:
 
-1. Create a service file at `/etc/systemd/system/vod-pipeline.service` (replace `your-user` and `/path/to/VodPipeline` with your actual username and installation path):
+1. Create a service file at `/etc/systemd/system/vod-pipeline.service` (replace `your-user` and `/path/to/VODPipeline-Function` with your actual username and installation path):
 
 ```ini
 [Unit]
@@ -143,7 +143,7 @@ After=network.target
 [Service]
 Type=simple
 User=your-user
-WorkingDirectory=/path/to/VodPipeline
+WorkingDirectory=/path/to/VODPipeline-Function
 ExecStart=/usr/bin/python3 -m bin.vod_watcher
 Restart=always
 

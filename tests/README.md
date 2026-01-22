@@ -1,6 +1,6 @@
-# VodPipeline Tests
+# VODPipeline-Function Tests
 
-This directory contains unit tests for the VodPipeline project.
+This directory contains unit tests for the VODPipeline-Function project.
 
 ## Running Tests
 

@@ -31,7 +31,7 @@ jobs:
     
     - name: Build project
       run: |
-        echo "Building VodPipeline project..."
+        echo "Building VODPipeline-Function project..."
         python -m compileall . -q
         echo "Build completed successfully"
     
