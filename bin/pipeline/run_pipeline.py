@@ -56,6 +56,7 @@ def run_for_file(input_path: Path):
     # Ensure the output base directory exists
     EXPORT_BASE.mkdir(parents=True, exist_ok=True)
 
+    # Use file stem for directory name (human-readable) while job_id (UUID) is for API tracking
     job_dir = EXPORT_BASE / input_path.stem
     job_dir.mkdir(parents=True, exist_ok=True)
 

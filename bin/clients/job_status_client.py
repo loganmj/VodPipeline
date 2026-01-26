@@ -30,7 +30,12 @@ class JobStatusClient:
         self.api_base_url = api_base_url
         self.max_retries = max_retries
         self.retry_delay = retry_delay
-        self.enabled = api_base_url is not None and len(api_base_url.strip()) > 0
+        self.enabled = self._is_api_url_valid(api_base_url)
+    
+    @staticmethod
+    def _is_api_url_valid(api_base_url: Optional[str]) -> bool:
+        """Check if API base URL is valid and non-empty."""
+        return api_base_url is not None and len(api_base_url.strip()) > 0
     
     def post_status(self, job_status: JobStatus) -> bool:
         """
