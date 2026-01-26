@@ -136,6 +136,7 @@ Edit `bin/config.py` to customize:
 - **Silence Detection**: Noise threshold (`SILENCE_NOISE_DB`) and minimum duration (`SILENCE_MIN_DURATION`)
 - **Highlight Extraction**: Maximum number (`MAX_HIGHLIGHTS`), minimum duration (`MIN_HIGHLIGHT_DURATION`), and maximum duration (`MAX_HIGHLIGHT_DURATION`)
 - **API Integration**: Set the `API_BASE_URL` environment variable to enable job status events (e.g., `export API_BASE_URL=http://localhost:5000`)
+- **Status Server**: Set the `STATUS_SERVER_PORT` environment variable to configure the status endpoint port (default: 8080)
 
 ### Job Status Events
 
@@ -164,6 +165,69 @@ python3 -m bin.vod_watcher
 
 If `API_BASE_URL` is not set or is empty, the pipeline will run without API communication.
 
+### Status Endpoint
+
+The Function exposes a status endpoint that allows external systems (such as the API) to request the current job status. This is useful for establishing a base state when the UI is launched or refreshed.
+
+**Endpoint**: `GET /status`
+
+**Default Port**: 8080 (configurable via `STATUS_SERVER_PORT` environment variable)
+
+**Example Request**:
+```bash
+curl http://localhost:8080/status
+```
+
+**Example Response** (when a job is running):
+```json
+{
+  "jobId": "550e8400-e29b-41d4-a716-446655440000",
+  "fileName": "video.mp4",
+  "stage": "Silence Removal",
+  "percent": 42,
+  "timestamp": "2026-01-26T17:45:00Z",
+  "errorMessage": null
+}
+```
+
+**Example Response** (when idle):
+```json
+{
+  "jobId": null,
+  "fileName": null,
+  "stage": "Idle",
+  "percent": 0,
+  "timestamp": "2026-01-26T17:45:00Z",
+  "errorMessage": null
+}
+```
+
+**Example Response** (when failed):
+```json
+{
+  "jobId": "550e8400-e29b-41d4-a716-446655440000",
+  "fileName": "video.mp4",
+  "stage": "Failed",
+  "percent": 30,
+  "timestamp": "2026-01-26T17:45:00Z",
+  "errorMessage": "Error processing file"
+}
+```
+
+The status endpoint:
+- Returns the current job snapshot (not an event)
+- Never blocks
+- Always returns UTC timestamps
+- Returns "Idle" state when no job is running or when a job has completed successfully
+- Preserves "Failed" state until the next job starts
+
+To configure the status server port:
+
+```bash
+export STATUS_SERVER_PORT=9000
+python3 -m bin.vod_watcher
+```
+
 ## Running as a Service
 
 To run VODPipeline-Function as a systemd service:
@@ -182,6 +246,7 @@ WorkingDirectory=/path/to/VODPipeline-Function
 ExecStart=/usr/bin/python3 -m bin.vod_watcher
 Restart=always
 Environment="API_BASE_URL=http://localhost:5000"
+Environment="STATUS_SERVER_PORT=8080"
 
 [Install]
 WantedBy=multi-user.target
