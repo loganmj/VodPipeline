@@ -8,9 +8,10 @@ from pathlib import Path
 from watchdog.observers.polling import PollingObserverVFS
 from watchdog.events import FileSystemEventHandler
 
-from bin.config import INPUT_DIR
+from bin.config import INPUT_DIR, STATUS_SERVER_PORT
 from bin.utils.logging_utils import log
 from bin.pipeline.run_pipeline import run_for_file
+from bin.api.status_server import StatusServer
 
 
 # Global job queue and tracking set
@@ -86,6 +87,14 @@ class VODHandler(FileSystemEventHandler):
 def main() -> None:
     log(f"[WATCHER] Starting watcher on {INPUT_DIR}")
 
+    # Start the status server
+    status_server = StatusServer(port=STATUS_SERVER_PORT)
+    try:
+        status_server.start()
+    except Exception as e:
+        log(f"[WATCHER] Failed to start status server: {e}")
+        log("[WATCHER] Continuing without status server...")
+
     # Start the single worker thread
     worker = threading.Thread(target=worker_loop, daemon=True)
     worker.start()
@@ -106,6 +115,7 @@ def main() -> None:
     except KeyboardInterrupt:
         log("[WATCHER] KeyboardInterrupt received, stopping observer...")
         observer.stop()
+        status_server.stop()
 
     observer.join()
     log("[WATCHER] Observer stopped")

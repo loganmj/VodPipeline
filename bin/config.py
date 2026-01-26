@@ -26,3 +26,7 @@ MAX_HIGHLIGHT_DURATION = 90.0  # seconds
 # API configuration for job status events
 # Set to None or empty string to disable API communication
 API_BASE_URL = os.environ.get("API_BASE_URL", "")  # e.g., "http://localhost:5000"
+
+# Status server configuration
+# Port for the status endpoint HTTP server
+STATUS_SERVER_PORT = int(os.environ.get("STATUS_SERVER_PORT", "8080"))
