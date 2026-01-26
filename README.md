@@ -2,6 +2,13 @@
 
 An automated pipeline for first-pass editing of VOD recordings. This tool watches for new video files, removes silence, detects scenes, and extracts highlights automatically.
 
+## Related Repositories
+
+This is the function/processing component of the VODPipeline application. For the complete system, see also:
+
+- **UI**: [VODPipeline-UI](https://github.com/loganmj/VODPipeline-UI) - User interface for managing and viewing processed videos
+- **API**: [VODPipeline-API](https://github.com/loganmj/VODPipeline-API) - Backend API for the VODPipeline system
+
 ## Features
 
 - **Automated File Watching**: Monitors a directory for new MP4 files
