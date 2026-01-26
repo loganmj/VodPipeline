@@ -132,6 +132,111 @@ class TestJobStatusClient(unittest.TestCase):
         self.assertTrue(result)
         self.assertEqual(mock_urlopen.call_count, 1)
 
+    @patch('urllib.request.urlopen')
+    def test_emit_event_starting(self, mock_urlopen):
+        """Test emit_event for jobStarted event."""
+        # Mock successful response
+        mock_response = Mock()
+        mock_response.status = 200
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_urlopen.return_value = mock_response
+        
+        client = JobStatusClient(api_base_url="http://localhost:5000")
+        result = client.emit_event("test-id", "test.mp4", "Starting", 0)
+        
+        self.assertTrue(result)
+        self.assertEqual(mock_urlopen.call_count, 1)
+    
+    @patch('urllib.request.urlopen')
+    def test_emit_event_stage_change(self, mock_urlopen):
+        """Test emit_event for stage change."""
+        # Mock successful response
+        mock_response = Mock()
+        mock_response.status = 200
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_urlopen.return_value = mock_response
+        
+        client = JobStatusClient(api_base_url="http://localhost:5000")
+        # First, start a job
+        client.emit_event("test-id", "test.mp4", "Starting", 0)
+        # Then change stage
+        result = client.emit_event("test-id", "test.mp4", "Processing", 20)
+        
+        self.assertTrue(result)
+        # Should have called urlopen twice (once for starting, once for stage change)
+        self.assertEqual(mock_urlopen.call_count, 2)
+    
+    @patch('urllib.request.urlopen')
+    def test_emit_event_progress_update(self, mock_urlopen):
+        """Test emit_event for progress update within same stage."""
+        # Mock successful response
+        mock_response = Mock()
+        mock_response.status = 200
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_urlopen.return_value = mock_response
+        
+        client = JobStatusClient(api_base_url="http://localhost:5000")
+        # Start job and set stage
+        client.emit_event("test-id", "test.mp4", "Starting", 0)
+        client.emit_event("test-id", "test.mp4", "Processing", 20)
+        # Update progress in same stage
+        result = client.emit_event("test-id", "test.mp4", "Processing", 50)
+        
+        self.assertTrue(result)
+        # Should have called urlopen three times
+        self.assertEqual(mock_urlopen.call_count, 3)
+    
+    @patch('urllib.request.urlopen')
+    def test_emit_event_completed(self, mock_urlopen):
+        """Test emit_event for jobCompleted event."""
+        # Mock successful response
+        mock_response = Mock()
+        mock_response.status = 200
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_urlopen.return_value = mock_response
+        
+        client = JobStatusClient(api_base_url="http://localhost:5000")
+        result = client.emit_event("test-id", "test.mp4", "Completed", 100)
+        
+        self.assertTrue(result)
+        self.assertEqual(mock_urlopen.call_count, 1)
+    
+    @patch('urllib.request.urlopen')
+    def test_emit_event_failed(self, mock_urlopen):
+        """Test emit_event for jobFailed event."""
+        # Mock successful response
+        mock_response = Mock()
+        mock_response.status = 200
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_urlopen.return_value = mock_response
+        
+        client = JobStatusClient(api_base_url="http://localhost:5000")
+        result = client.emit_event("test-id", "test.mp4", "Failed", 35, error_message="Test error")
+        
+        self.assertTrue(result)
+        self.assertEqual(mock_urlopen.call_count, 1)
+    
+    @patch('urllib.request.urlopen')
+    def test_emit_event_failed_default_error_message(self, mock_urlopen):
+        """Test emit_event for jobFailed event with no error message."""
+        # Mock successful response
+        mock_response = Mock()
+        mock_response.status = 200
+        mock_response.__enter__ = Mock(return_value=mock_response)
+        mock_response.__exit__ = Mock(return_value=False)
+        mock_urlopen.return_value = mock_response
+        
+        client = JobStatusClient(api_base_url="http://localhost:5000")
+        result = client.emit_event("test-id", "test.mp4", "Failed", 35)
+        
+        self.assertTrue(result)
+        self.assertEqual(mock_urlopen.call_count, 1)
+
 
 if __name__ == '__main__':
     unittest.main()
