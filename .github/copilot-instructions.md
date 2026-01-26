@@ -67,7 +67,7 @@ def process_video(path, max_highlights=10):
 ### Logging
 - Use the centralized logging utility: `from bin.utils.logging_utils import log`
 - Include context in log messages: `log(f"[STAGE_NAME] Message")`
-- Use appropriate log levels and formatting
+- Follow the existing `log()` formatting; log levels are not currently supported, so include level/context keywords in the message text if needed (e.g., `log("[ERROR][STAGE_NAME] Message")`)
 
 ## Configuration
 - All configuration should be in `bin/config.py`
@@ -113,6 +113,7 @@ def process_video(path, max_highlights=10):
 ```python
 # Good: Type hints, error handling, logging
 from pathlib import Path
+from typing import Any
 from bin.utils.logging_utils import log
 
 def extract_metadata(video_path: Path) -> dict[str, Any]:
