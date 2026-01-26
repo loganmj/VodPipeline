@@ -91,8 +91,11 @@ def main() -> None:
     status_server = StatusServer(port=STATUS_SERVER_PORT)
     try:
         status_server.start()
+    except OSError as e:
+        log(f"[WATCHER] Failed to start status server (port may be in use): {e}")
+        log("[WATCHER] Continuing without status server...")
     except Exception as e:
-        log(f"[WATCHER] Failed to start status server: {e}")
+        log(f"[WATCHER] Unexpected error starting status server: {e}")
         log("[WATCHER] Continuing without status server...")
 
     # Start the single worker thread

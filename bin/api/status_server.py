@@ -104,7 +104,7 @@ class StatusServer:
         if self.server is not None:
             log("[STATUS_SERVER] Stopping server")
             self.server.shutdown()
-            self.server.server_close()  # Properly close the socket
+            self.server.server_close()
             self.server = None
             if self.thread is not None:
                 self.thread.join(timeout=5)
