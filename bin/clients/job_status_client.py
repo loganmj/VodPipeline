@@ -7,6 +7,7 @@ import time
 
 from bin.models.job_status import JobStatus
 from bin.utils.logging_utils import log
+from bin.state.job_state import JobStateManager
 
 
 class JobStatusClient:
@@ -31,6 +32,7 @@ class JobStatusClient:
         self.max_retries = max_retries
         self.retry_delay = retry_delay
         self.enabled = self._is_api_url_valid(api_base_url)
+        self.state_manager = JobStateManager()
     
     @staticmethod
     def _is_api_url_valid(api_base_url: Optional[str]) -> bool:
@@ -88,26 +90,31 @@ class JobStatusClient:
         return False
     
     def post_started(self, job_id: str, file_name: str) -> bool:
-        """Post a jobStarted event."""
+        """Post a jobStarted event and update internal state."""
+        self.state_manager.start_job(job_id, file_name)
         status = JobStatus.create_started(job_id, file_name)
         return self.post_status(status)
     
     def post_progress(self, job_id: str, file_name: str, stage: str, percent: int) -> bool:
-        """Post a jobProgressUpdated event."""
+        """Post a jobProgressUpdated event and update internal state."""
+        self.state_manager.update_progress(percent)
         status = JobStatus.create_progress(job_id, file_name, stage, percent)
         return self.post_status(status)
     
     def post_stage_changed(self, job_id: str, file_name: str, stage: str, percent: int) -> bool:
-        """Post a jobStageChanged event."""
+        """Post a jobStageChanged event and update internal state."""
+        self.state_manager.update_stage(stage, percent)
         status = JobStatus.create_stage_changed(job_id, file_name, stage, percent)
         return self.post_status(status)
     
     def post_completed(self, job_id: str, file_name: str) -> bool:
-        """Post a jobCompleted event."""
+        """Post a jobCompleted event and update internal state."""
+        self.state_manager.complete_job()
         status = JobStatus.create_completed(job_id, file_name)
         return self.post_status(status)
     
     def post_failed(self, job_id: str, file_name: str, error_message: str, current_percent: int = 0) -> bool:
-        """Post a jobFailed event."""
+        """Post a jobFailed event and update internal state."""
+        self.state_manager.fail_job(error_message)
         status = JobStatus.create_failed(job_id, file_name, error_message, current_percent)
         return self.post_status(status)

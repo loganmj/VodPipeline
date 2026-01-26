@@ -24,14 +24,14 @@ class JobStatus:
         Convert JobStatus to a dictionary suitable for JSON serialization.
         
         Returns:
-            dict: Dictionary representation with ISO format timestamp
+            dict: Dictionary representation with ISO format timestamp (Z suffix)
         """
         return {
             "jobId": self.job_id,
             "fileName": self.file_name,
             "stage": self.stage,
             "percent": self.percent,
-            "timestamp": self.timestamp.isoformat(),
+            "timestamp": self.timestamp.isoformat().replace('+00:00', 'Z'),
             "errorMessage": self.error_message
         }
     
