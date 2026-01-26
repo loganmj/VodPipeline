@@ -57,7 +57,7 @@ class TestJobState(unittest.TestCase):
         self.assertEqual(result["fileName"], "test.mp4")
         self.assertEqual(result["stage"], "Processing")
         self.assertEqual(result["percent"], 50)
-        self.assertEqual(result["timestamp"], now.isoformat())
+        self.assertEqual(result["timestamp"], now.isoformat().replace('+00:00', 'Z'))
         self.assertIsNone(result["errorMessage"])
 
 

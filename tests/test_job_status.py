@@ -61,7 +61,7 @@ class TestJobStatus(unittest.TestCase):
         self.assertEqual(result["fileName"], "test-video.mp4")
         self.assertEqual(result["stage"], "Processing")
         self.assertEqual(result["percent"], 50)
-        self.assertEqual(result["timestamp"], timestamp.isoformat())
+        self.assertEqual(result["timestamp"], timestamp.isoformat().replace('+00:00', 'Z'))
         self.assertIsNone(result["errorMessage"])
 
     def test_create_started(self):

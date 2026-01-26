@@ -35,7 +35,7 @@ class StatusHandler(BaseHTTPRequestHandler):
                     "fileName": None,
                     "stage": "Idle",
                     "percent": 0,
-                    "timestamp": state.last_updated_at.isoformat(),
+                    "timestamp": state.last_updated_at.isoformat().replace('+00:00', 'Z'),
                     "errorMessage": None
                 }
             else:
